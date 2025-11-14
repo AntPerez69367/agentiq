@@ -1,6 +1,4 @@
-/**
- * This file defines the columns for the customer data table. Utilizes the customerSchema
- */
+import ActionsCell from "./ActionsCell";
 
 const firstNameCell = {
   accessorKey: "firstName",
@@ -46,10 +44,16 @@ const addressCell = {
   },
 };
 
+const actions = {
+  id: "actions",
+  cell: ({ row }) => <ActionsCell customer={row.original} />,
+};
+
 export default [
   firstNameCell,
   lastNameCell,
   emailCell,
   phoneNumberCell,
   addressCell,
+  actions,
 ];

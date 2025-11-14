@@ -6,7 +6,7 @@ const apiClient = async (endpoint, options = {}) => {
   const config = {
     headers: {
       "Content-Type": "application/json",
-      ...options.headers.throw,
+      ...options.headers,
     },
     ...options,
   };

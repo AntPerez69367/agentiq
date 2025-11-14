@@ -11,8 +11,9 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as PoliciesRouteImport } from './routes/policies'
 import { Route as EmployeesRouteImport } from './routes/employees'
-import { Route as CustomersRouteImport } from './routes/customers'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CustomersIndexRouteImport } from './routes/customers/index'
+import { Route as CustomersCustomerIdRouteImport } from './routes/customers/$customerId'
 
 const PoliciesRoute = PoliciesRouteImport.update({
   id: '/policies',
@@ -24,49 +25,69 @@ const EmployeesRoute = EmployeesRouteImport.update({
   path: '/employees',
   getParentRoute: () => rootRouteImport,
 } as any)
-const CustomersRoute = CustomersRouteImport.update({
-  id: '/customers',
-  path: '/customers',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CustomersIndexRoute = CustomersIndexRouteImport.update({
+  id: '/customers/',
+  path: '/customers/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CustomersCustomerIdRoute = CustomersCustomerIdRouteImport.update({
+  id: '/customers/$customerId',
+  path: '/customers/$customerId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/customers': typeof CustomersRoute
   '/employees': typeof EmployeesRoute
   '/policies': typeof PoliciesRoute
+  '/customers/$customerId': typeof CustomersCustomerIdRoute
+  '/customers': typeof CustomersIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/customers': typeof CustomersRoute
   '/employees': typeof EmployeesRoute
   '/policies': typeof PoliciesRoute
+  '/customers/$customerId': typeof CustomersCustomerIdRoute
+  '/customers': typeof CustomersIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/customers': typeof CustomersRoute
   '/employees': typeof EmployeesRoute
   '/policies': typeof PoliciesRoute
+  '/customers/$customerId': typeof CustomersCustomerIdRoute
+  '/customers/': typeof CustomersIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/customers' | '/employees' | '/policies'
+  fullPaths:
+    | '/'
+    | '/employees'
+    | '/policies'
+    | '/customers/$customerId'
+    | '/customers'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/customers' | '/employees' | '/policies'
-  id: '__root__' | '/' | '/customers' | '/employees' | '/policies'
+  to: '/' | '/employees' | '/policies' | '/customers/$customerId' | '/customers'
+  id:
+    | '__root__'
+    | '/'
+    | '/employees'
+    | '/policies'
+    | '/customers/$customerId'
+    | '/customers/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  CustomersRoute: typeof CustomersRoute
   EmployeesRoute: typeof EmployeesRoute
   PoliciesRoute: typeof PoliciesRoute
+  CustomersCustomerIdRoute: typeof CustomersCustomerIdRoute
+  CustomersIndexRoute: typeof CustomersIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -85,13 +106,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof EmployeesRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/customers': {
-      id: '/customers'
-      path: '/customers'
-      fullPath: '/customers'
-      preLoaderRoute: typeof CustomersRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/': {
       id: '/'
       path: '/'
@@ -99,14 +113,29 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/customers/': {
+      id: '/customers/'
+      path: '/customers'
+      fullPath: '/customers'
+      preLoaderRoute: typeof CustomersIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/customers/$customerId': {
+      id: '/customers/$customerId'
+      path: '/customers/$customerId'
+      fullPath: '/customers/$customerId'
+      preLoaderRoute: typeof CustomersCustomerIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  CustomersRoute: CustomersRoute,
   EmployeesRoute: EmployeesRoute,
   PoliciesRoute: PoliciesRoute,
+  CustomersCustomerIdRoute: CustomersCustomerIdRoute,
+  CustomersIndexRoute: CustomersIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

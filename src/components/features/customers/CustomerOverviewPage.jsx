@@ -1,12 +1,15 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useAtom } from "jotai";
+import { Plus } from "lucide-react";
 import customersAtom from "@state/customers/customersAtom";
 import usePagination from "@hooks/usePagination";
 import CustomerOverviewTable from "./CustomerOverviewTable";
+import CustomerFormDialog from "./CustomerFormDialog";
 import titleAtom from "@state/global/titleAtom";
 import { PAGINATION } from "@/constants";
 import LoadingSpinner from "@components/common/LoadingSpinner";
 import ErrorDisplay from "@components/common/ErrorDisplay";
+import { Button } from "@components/ui/button";
 import {
   Pagination,
   PaginationNext,
@@ -23,6 +26,7 @@ import {
 const CustomerOverviewPage = () => {
   const { page, limit, setPage, setLimit } = usePagination();
   const [, setTitle] = useAtom(titleAtom);
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
 
   useEffect(() => {
     setTitle("Customer Overview");
@@ -70,8 +74,18 @@ const CustomerOverviewPage = () => {
   const hasPreviousPage = !!data.links?.prev;
 
   return (
-    <div>
-      <CustomerOverviewTable className="mb-4" data={data.customers} />
+    <div className="space-y-4">
+      <div className="flex justify-end">
+        <Button
+          onClick={() => setIsCreateOpen(true)}
+          className="flex items-center gap-2 bg-purple-600 hover:bg-purple-700"
+        >
+          <Plus size={20} />
+          Create Customer
+        </Button>
+      </div>
+
+      <CustomerOverviewTable data={data.customers} />
 
       <Pagination>
         <PaginationPrevious
@@ -97,6 +111,8 @@ const CustomerOverviewPage = () => {
           disabled={!hasNextPage || isFetching}
         />
       </Pagination>
+
+      <CustomerFormDialog open={isCreateOpen} onOpenChange={setIsCreateOpen} />
     </div>
   );
 };
