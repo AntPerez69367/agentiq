@@ -1,4 +1,4 @@
-import ActionsCell from "./ActionsCell";
+import EmployeeActionMenu from "./EmployeeActionMenu";
 
 const firstNameCell = {
   accessorKey: "firstName",
@@ -27,33 +27,20 @@ const emailCell = {
     return <div className="text-center text-white">{row.original.email}</div>;
   },
 };
-const phoneNumberCell = {
-  accessorKey: "phoneNumber",
-  header: () => <div className="text-center text-white">Phone Number</div>,
+const titleCell = {
+  accessorKey: "title",
+  header: () => <div className="text-center text-white">Title</div>,
   cell: ({ row }) => {
-    return (
-      <div className="text-center text-white">{row.original.phoneNumber}</div>
-    );
-  },
-};
-const addressCell = {
-  accessorKey: "address",
-  header: () => <div className="text-center text-white">Address</div>,
-  cell: ({ row }) => {
-    return <div className="text-center text-white">{row.original.address}</div>;
+    return <div className="text-center text-white">{row.original.title}</div>;
   },
 };
 
 const actions = {
   id: "actions",
-  cell: ({ row }) => <ActionsCell customer={row.original} />,
+  cell: ({ row }) => {
+    const employee = row.original;
+    return <EmployeeActionMenu employee={employee} />;
+  },
 };
 
-export default [
-  firstNameCell,
-  lastNameCell,
-  emailCell,
-  phoneNumberCell,
-  addressCell,
-  actions,
-];
+export default [firstNameCell, lastNameCell, emailCell, titleCell, actions];

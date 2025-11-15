@@ -27,6 +27,14 @@ const apiClient = async (endpoint, options = {}) => {
       throw new Error(errorData.message || `API Error: ${response.status}`);
     }
 
+    // Handle empty responses (like 204 No Content)
+    if (
+      response.status === 204 ||
+      response.headers.get("content-length") === "0"
+    ) {
+      return null;
+    }
+
     return response.json();
   } catch (error) {
     clearTimeout(timeoutId);

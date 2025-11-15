@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -7,25 +6,47 @@ import {
   DialogTitle,
 } from "@components/ui/dialog";
 import CustomerForm from "./CustomerForm";
+import { useAtom } from "jotai";
+import {
+  editCustomerIsOpenAtom,
+  createCustomerIsOpenAtom,
+  selectedCustomerAtom,
+} from "@state/customers/customerOverview";
 
-const CustomerFormDialog = ({
-  customer = null,
-  trigger,
-  open,
-  onOpenChange,
-}) => {
+const CustomerFormDialog = ({ trigger }) => {
+  const [editCustomerIsOpen, setEditCustomerIsOpen] = useAtom(
+    editCustomerIsOpenAtom
+  );
+
+  const [createCustomerIsOpen, setCreateCustomerIsOpen] = useAtom(
+    createCustomerIsOpenAtom
+  );
+
+  const [customer, setSelectedCustomer] = useAtom(selectedCustomerAtom);
+
   const isEditMode = !!customer;
-  const [isOpen, setIsOpen] = useState(false);
 
-  const dialogOpen = open !== undefined ? open : isOpen;
-  const setDialogOpen = onOpenChange || setIsOpen;
+  const setDialogOpen = isEditMode
+    ? setEditCustomerIsOpen
+    : setCreateCustomerIsOpen;
 
   const handleSuccess = () => {
     setDialogOpen(false);
+    setSelectedCustomer(null);
+  };
+
+  const handleOpenChange = (open) => {
+    setDialogOpen(open);
+    if (!open) {
+      setSelectedCustomer(null);
+    }
   };
 
   return (
-    <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+    <Dialog
+      open={isEditMode ? editCustomerIsOpen : createCustomerIsOpen}
+      onOpenChange={() => handleOpenChange(false)}
+    >
       {trigger}
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>

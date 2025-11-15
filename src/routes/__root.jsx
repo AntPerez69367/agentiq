@@ -1,10 +1,16 @@
-import { createRootRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
+import {
+  createRootRoute,
+  Link,
+  Outlet,
+  useRouterState,
+} from "@tanstack/react-router";
 import { User } from "lucide-react";
 import { useAtom } from "jotai";
 import titleAtom from "@state/global/titleAtom";
 import userAtom from "@state/global/userAtom";
 import { APP_META, ROUTES, ROUTE_LABELS } from "@/constants";
 import ErrorBoundary from "@components/common/ErrorBoundary";
+import { Toaster } from "@/components/ui/sonner";
 
 const NavigationLink = ({ to, children }) => {
   const router = useRouterState();
@@ -26,10 +32,18 @@ const NavigationLink = ({ to, children }) => {
 
 const NavigationMenu = () => (
   <nav className="flex flex-col gap-2">
-    <NavigationLink to={ROUTES.HOME}>{ROUTE_LABELS[ROUTES.HOME]}</NavigationLink>
-    <NavigationLink to={ROUTES.CUSTOMERS}>{ROUTE_LABELS[ROUTES.CUSTOMERS]}</NavigationLink>
-    <NavigationLink to={ROUTES.EMPLOYEES}>{ROUTE_LABELS[ROUTES.EMPLOYEES]}</NavigationLink>
-    <NavigationLink to={ROUTES.POLICIES}>{ROUTE_LABELS[ROUTES.POLICIES]}</NavigationLink>
+    <NavigationLink to={ROUTES.HOME}>
+      {ROUTE_LABELS[ROUTES.HOME]}
+    </NavigationLink>
+    <NavigationLink to={ROUTES.CUSTOMERS}>
+      {ROUTE_LABELS[ROUTES.CUSTOMERS]}
+    </NavigationLink>
+    <NavigationLink to={ROUTES.EMPLOYEES}>
+      {ROUTE_LABELS[ROUTES.EMPLOYEES]}
+    </NavigationLink>
+    <NavigationLink to={ROUTES.POLICIES}>
+      {ROUTE_LABELS[ROUTES.POLICIES]}
+    </NavigationLink>
   </nav>
 );
 
@@ -38,6 +52,7 @@ const RootLayout = () => {
     <div className="flex h-screen bg-gray-900">
       <LeftSidebar />
       <MainContent />
+      <Toaster />
     </div>
   );
 };
@@ -54,7 +69,10 @@ const Header = () => {
           <span className="text-lg font-medium">
             Welcome, {user?.name || "User"}
           </span>
-          <User className="hover:text-purple-400 transition-colors cursor-pointer" size={24} />
+          <User
+            className="hover:text-purple-400 transition-colors cursor-pointer"
+            size={24}
+          />
         </div>
       </div>
     </header>
@@ -64,7 +82,9 @@ const Header = () => {
 const LeftSidebar = () => (
   <div className="w-full text-center md:w-[15%] bg-gray-850 text-gray-100 p-6 border-r border-gray-700">
     <div className="mb-8">
-      <h2 className="mb-1 text-2xl font-bold text-purple-400">{APP_META.NAME}</h2>
+      <h2 className="mb-1 text-2xl font-bold text-purple-400">
+        {APP_META.NAME}
+      </h2>
       <hr className="border-gray-700" />
     </div>
     <NavigationMenu />

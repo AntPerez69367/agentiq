@@ -1,14 +1,12 @@
-import { useEffect, useMemo, useState } from "react";
+import usePagination from "@hooks/usePagination";
+import employeesAtom from "@/state/employees/employeesAtom";
 import { useAtom } from "jotai";
 import { Plus } from "lucide-react";
-import customersAtom from "@state/customers/customersAtom";
-import usePagination from "@hooks/usePagination";
-import CustomerOverviewTable from "./CustomerOverviewTable";
-import CustomerFormDialog from "./CustomerFormDialog";
-import titleAtom from "@state/global/titleAtom";
+import { useEffect, useMemo } from "react";
+import EmployeeOverviewTable from "./EmployeeOverviewTable";
 import { PAGINATION } from "@/constants";
-import LoadingSpinner from "@components/common/LoadingSpinner";
 import ErrorDisplay from "@components/common/ErrorDisplay";
+import LoadingSpinner from "@components/common/LoadingSpinner";
 import { Button } from "@components/ui/button";
 import {
   Pagination,
@@ -23,17 +21,18 @@ import {
   SelectValue,
 } from "@components/ui/select";
 
-const CustomerOverviewPage = () => {
+import titleAtom from "@state/global/titleAtom";
+
+const EmployeeOverviewPage = () => {
   const { page, limit, setPage, setLimit } = usePagination();
   const [, setTitle] = useAtom(titleAtom);
-  const [isCreateOpen, setIsCreateOpen] = useState(false);
 
   useEffect(() => {
-    setTitle("Customer Overview");
+    setTitle("Employee Overview");
   }, [setTitle]);
 
   const paginatedAtom = useMemo(
-    () => customersAtom(page, limit),
+    () => employeesAtom(page, limit),
     [page, limit]
   );
 
@@ -57,14 +56,14 @@ const CustomerOverviewPage = () => {
   };
 
   if (isPending) {
-    return <LoadingSpinner text="Loading customers..." />;
+    return <LoadingSpinner text="Loading employees..." />;
   }
 
   if (isError) {
     return (
       <ErrorDisplay
-        title="Error loading customers"
-        error={{ message: "Failed to fetch customer data. Please try again." }}
+        title="Error loading employees"
+        error={{ message: "Failed to fetch employee data. Please try again." }}
         onRetry={handleRetry}
       />
     );
@@ -73,19 +72,21 @@ const CustomerOverviewPage = () => {
   const hasNextPage = !!data.links?.next;
   const hasPreviousPage = !!data.links?.prev;
 
+  const handleOpenCreateModal = () => {};
+
   return (
     <div className="space-y-4">
       <div className="flex justify-end">
         <Button
-          onClick={() => setIsCreateOpen(true)}
+          onClick={handleOpenCreateModal}
           className="flex items-center gap-2 bg-purple-600 hover:bg-purple-700"
         >
           <Plus size={20} />
-          Create Customer
+          Create Employee
         </Button>
       </div>
 
-      <CustomerOverviewTable data={data.customers} />
+      <EmployeeOverviewTable data={data.employees} />
 
       <Pagination>
         <PaginationPrevious
@@ -111,10 +112,8 @@ const CustomerOverviewPage = () => {
           disabled={!hasNextPage || isFetching}
         />
       </Pagination>
-
-      <CustomerFormDialog open={isCreateOpen} onOpenChange={setIsCreateOpen} />
     </div>
   );
 };
 
-export default CustomerOverviewPage;
+export default EmployeeOverviewPage;

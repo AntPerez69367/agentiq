@@ -5,7 +5,7 @@ import LoadingSpinner from "@components/common/LoadingSpinner";
 import {
   customerFormSchema,
   defaultCustomerFormValues,
-} from "@/schema/customerFormSchema";
+} from "@/schema/customer/customerFormSchema";
 import {
   createCustomerMutation,
   updateCustomerMutation,
