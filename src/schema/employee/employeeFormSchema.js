@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const employeeFormSchema = z.object({
+export const employeeFormSchema = z.object({
   firstName: z
     .string()
     .min(2, "First name must be at least 2 characters")
@@ -22,5 +22,3 @@ export const defaultEmployeeFormValues = {
   email: "",
   title: "",
 };
-
-export default employeeFormSchema;

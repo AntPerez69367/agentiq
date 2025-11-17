@@ -1,6 +1,6 @@
 import usePagination from "@hooks/usePagination";
 import customersAtom from "@state/customers/customersAtom";
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import { Plus } from "lucide-react";
 import { useEffect, useMemo } from "react";
 import CustomerOverviewTable from "./CustomerOverviewTable";
@@ -26,8 +26,8 @@ import { createCustomerIsOpenAtom } from "@/state/customers/customerOverview";
 
 const CustomerOverviewPage = () => {
   const { page, limit, setPage, setLimit } = usePagination();
-  const [, setTitle] = useAtom(titleAtom);
-  const [, setCustomerCreateOpen] = useAtom(createCustomerIsOpenAtom);
+  const setTitle = useSetAtom(titleAtom);
+  const setCustomerCreateOpen = useSetAtom(createCustomerIsOpenAtom);
 
   useEffect(() => {
     setTitle("Customer Overview");

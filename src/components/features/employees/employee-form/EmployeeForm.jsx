@@ -3,27 +3,27 @@ import { useAtom } from "jotai";
 import FormInput from "@components/ui/form-input";
 import LoadingSpinner from "@components/common/LoadingSpinner";
 import {
-  customerFormSchema,
-  defaultCustomerFormValues,
-} from "@/schema/customer/customerFormSchema";
+  employeeFormSchema,
+  defaultEmployeeFormValues,
+} from "@/schema/employee/employeeFormSchema";
 import {
-  createCustomerMutation,
-  updateCustomerMutation,
-} from "@state/customers/customerMutations";
+  createEmployeeMutation,
+  updateEmployeeMutation,
+} from "@state/employees/employeeMutations";
 
-const CustomerForm = ({ customer = null, onSuccess }) => {
-  const isEditMode = !!customer;
+const EmployeeForm = ({ employee = null, onSuccess }) => {
+  const isEditMode = !!employee;
 
-  const [createMutation] = useAtom(createCustomerMutation);
-  const [updateMutation] = useAtom(updateCustomerMutation);
+  const [createMutation] = useAtom(createEmployeeMutation);
+  const [updateMutation] = useAtom(updateEmployeeMutation);
 
   const form = useForm({
-    defaultValues: customer || defaultCustomerFormValues,
+    defaultValues: employee || defaultEmployeeFormValues,
     onSubmit: async ({ value }) => {
       try {
         if (isEditMode) {
           await updateMutation.mutateAsync({
-            id: customer.id,
+            id: employee.id,
             data: value,
           });
         } else {
@@ -44,7 +44,7 @@ const CustomerForm = ({ customer = null, onSuccess }) => {
       {error && (
         <div className="p-3 bg-red-500/10 border border-red-500 rounded-lg">
           <p className="text-sm text-red-400">
-            {error.message || "Failed to save customer. Please try again."}
+            {error.message || "Failed to save employee. Please try again."}
           </p>
         </div>
       )}
@@ -60,7 +60,7 @@ const CustomerForm = ({ customer = null, onSuccess }) => {
         <form.Field
           name="firstName"
           validators={{
-            onChange: customerFormSchema.shape.firstName,
+            onChange: employeeFormSchema.shape.firstName,
           }}
         >
           {(field) => (
@@ -81,7 +81,7 @@ const CustomerForm = ({ customer = null, onSuccess }) => {
         <form.Field
           name="lastName"
           validators={{
-            onChange: customerFormSchema.shape.lastName,
+            onChange: employeeFormSchema.shape.lastName,
           }}
         >
           {(field) => (
@@ -102,7 +102,7 @@ const CustomerForm = ({ customer = null, onSuccess }) => {
         <form.Field
           name="email"
           validators={{
-            onChange: customerFormSchema.shape.email,
+            onChange: employeeFormSchema.shape.email,
           }}
         >
           {(field) => (
@@ -122,42 +122,21 @@ const CustomerForm = ({ customer = null, onSuccess }) => {
         </form.Field>
 
         <form.Field
-          name="phoneNumber"
+          name="title"
           validators={{
-            onChange: customerFormSchema.shape.phoneNumber,
+            onChange: employeeFormSchema.shape.title,
           }}
         >
           {(field) => (
             <FormInput
-              label="Phone Number"
+              label="Title"
               name={field.name}
-              type="tel"
+              type="text"
               value={field.state.value}
               onChange={(e) => field.handleChange(e.target.value)}
               onBlur={field.handleBlur}
               error={field.state.meta.errors?.[0]}
-              placeholder="+1 (555) 123-4567"
-              required
-              disabled={isMutating}
-            />
-          )}
-        </form.Field>
-
-        <form.Field
-          name="address"
-          validators={{
-            onChange: customerFormSchema.shape.address,
-          }}
-        >
-          {(field) => (
-            <FormInput
-              label="Address"
-              name={field.name}
-              value={field.state.value}
-              onChange={(e) => field.handleChange(e.target.value)}
-              onBlur={field.handleBlur}
-              error={field.state.meta.errors?.[0]}
-              placeholder="123 Main St, City, State 12345"
+              placeholder="Software Engineer"
               required
               disabled={isMutating}
             />
@@ -176,7 +155,7 @@ const CustomerForm = ({ customer = null, onSuccess }) => {
                 {isEditMode ? "Updating..." : "Creating..."}
               </>
             ) : (
-              <>{isEditMode ? "Update Customer" : "Create Customer"}</>
+              <>{isEditMode ? "Update Employee" : "Create Employee"}</>
             )}
           </button>
         </div>
@@ -185,4 +164,4 @@ const CustomerForm = ({ customer = null, onSuccess }) => {
   );
 };
 
-export default CustomerForm;
+export default EmployeeForm;

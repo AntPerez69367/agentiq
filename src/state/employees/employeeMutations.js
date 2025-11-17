@@ -9,7 +9,7 @@ export const createEmployeeMutation = atomWithMutation((get) => ({
     const queryClient = get(queryClientAtom);
     toast.success("Employee created successfully!");
     queryClient.invalidateQueries({
-      queryKey: queryKeys.employees.list(),
+      queryKey: queryKeys.employees.lists(),
     });
   },
   onError: (error) => {
@@ -27,7 +27,7 @@ export const updateEmployeeMutation = atomWithMutation((get) => ({
     });
 
     queryClient.invalidateQueries({
-      queryKey: queryKeys.employees.list(),
+      queryKey: queryKeys.employees.lists(),
     });
   },
   onError: (error) => {
@@ -41,7 +41,7 @@ export const deleteEmployeeMutation = atomWithMutation((get) => ({
     const queryClient = get(queryClientAtom);
     toast.success("Employee deleted successfully!");
     queryClient.invalidateQueries({
-      queryKey: queryKeys.employees.list(),
+      queryKey: queryKeys.employees.lists(),
     });
   },
   onError: (error) => {

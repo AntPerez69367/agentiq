@@ -3,27 +3,27 @@ import { useAtom } from "jotai";
 import FormInput from "@components/ui/form-input";
 import LoadingSpinner from "@components/common/LoadingSpinner";
 import {
-  customerFormSchema,
-  defaultCustomerFormValues,
-} from "@/schema/customer/customerFormSchema";
+  policyFormSchema,
+  defaultPolicyFormValues,
+} from "@/schema/policy/policyFormSchema";
 import {
-  createCustomerMutation,
-  updateCustomerMutation,
-} from "@state/customers/customerMutations";
+  createPolicyMutation,
+  updatePolicyMutation,
+} from "@state/policies/policyMutations";
 
-const CustomerForm = ({ customer = null, onSuccess }) => {
-  const isEditMode = !!customer;
+const PolicyForm = ({ policy = null, onSuccess }) => {
+  const isEditMode = !!policy;
 
-  const [createMutation] = useAtom(createCustomerMutation);
-  const [updateMutation] = useAtom(updateCustomerMutation);
+  const [createMutation] = useAtom(createPolicyMutation);
+  const [updateMutation] = useAtom(updatePolicyMutation);
 
   const form = useForm({
-    defaultValues: customer || defaultCustomerFormValues,
+    defaultValues: policy || defaultPolicyFormValues,
     onSubmit: async ({ value }) => {
       try {
         if (isEditMode) {
           await updateMutation.mutateAsync({
-            id: customer.id,
+            id: policy.id,
             data: value,
           });
         } else {
@@ -44,7 +44,7 @@ const CustomerForm = ({ customer = null, onSuccess }) => {
       {error && (
         <div className="p-3 bg-red-500/10 border border-red-500 rounded-lg">
           <p className="text-sm text-red-400">
-            {error.message || "Failed to save customer. Please try again."}
+            {error.message || "Failed to save policy. Please try again."}
           </p>
         </div>
       )}
@@ -58,20 +58,41 @@ const CustomerForm = ({ customer = null, onSuccess }) => {
         className="space-y-4"
       >
         <form.Field
-          name="firstName"
+          name="customerId"
           validators={{
-            onChange: customerFormSchema.shape.firstName,
+            onChange: policyFormSchema.shape.customerId,
           }}
         >
           {(field) => (
             <FormInput
-              label="First Name"
+              label="Customer ID"
+              name={field.name}
+              value={field.state.value}
+              onChange={(e) => field.handleChange(Number(e.target.value))}
+              onBlur={field.handleBlur}
+              error={!field.state.meta.isValid && field.state.meta.errors?.[0]}
+              placeholder={1}
+              required
+              disabled={isMutating}
+            />
+          )}
+        </form.Field>
+
+        <form.Field
+          name="policyNumber"
+          validators={{
+            onChange: policyFormSchema.shape.policyNumber,
+          }}
+        >
+          {(field) => (
+            <FormInput
+              label="Policy Number"
               name={field.name}
               value={field.state.value}
               onChange={(e) => field.handleChange(e.target.value)}
               onBlur={field.handleBlur}
               error={!field.state.meta.isValid && field.state.meta.errors?.[0]}
-              placeholder="John"
+              placeholder="CXA-123467"
               required
               disabled={isMutating}
             />
@@ -79,20 +100,20 @@ const CustomerForm = ({ customer = null, onSuccess }) => {
         </form.Field>
 
         <form.Field
-          name="lastName"
+          name="policyName"
           validators={{
-            onChange: customerFormSchema.shape.lastName,
+            onChange: policyFormSchema.shape.policyName,
           }}
         >
           {(field) => (
             <FormInput
-              label="Last Name"
+              label="Policy Name"
               name={field.name}
               value={field.state.value}
               onChange={(e) => field.handleChange(e.target.value)}
               onBlur={field.handleBlur}
               error={field.state.meta.errors?.[0]}
-              placeholder="Doe"
+              placeholder="Auto Insurance"
               required
               disabled={isMutating}
             />
@@ -100,21 +121,21 @@ const CustomerForm = ({ customer = null, onSuccess }) => {
         </form.Field>
 
         <form.Field
-          name="email"
+          name="policyDescription"
           validators={{
-            onChange: customerFormSchema.shape.email,
+            onChange: policyFormSchema.shape.policyDescription,
           }}
         >
           {(field) => (
             <FormInput
-              label="Email"
+              label="Description"
               name={field.name}
-              type="email"
+              type="text"
               value={field.state.value}
               onChange={(e) => field.handleChange(e.target.value)}
               onBlur={field.handleBlur}
               error={field.state.meta.errors?.[0]}
-              placeholder="john.doe@example.com"
+              placeholder="Policy description"
               required
               disabled={isMutating}
             />
@@ -122,21 +143,21 @@ const CustomerForm = ({ customer = null, onSuccess }) => {
         </form.Field>
 
         <form.Field
-          name="phoneNumber"
+          name="policyType"
           validators={{
-            onChange: customerFormSchema.shape.phoneNumber,
+            onChange: policyFormSchema.shape.policyType,
           }}
         >
           {(field) => (
             <FormInput
-              label="Phone Number"
+              label="Type"
               name={field.name}
-              type="tel"
+              type="text"
               value={field.state.value}
               onChange={(e) => field.handleChange(e.target.value)}
               onBlur={field.handleBlur}
               error={field.state.meta.errors?.[0]}
-              placeholder="+1 (555) 123-4567"
+              placeholder="Policy type"
               required
               disabled={isMutating}
             />
@@ -144,20 +165,22 @@ const CustomerForm = ({ customer = null, onSuccess }) => {
         </form.Field>
 
         <form.Field
-          name="address"
+          name="policyStatus"
           validators={{
-            onChange: customerFormSchema.shape.address,
+            onChange: policyFormSchema.shape.policyStatus,
           }}
         >
           {(field) => (
             <FormInput
-              label="Address"
+              label="Status"
               name={field.name}
+              type="select"
+              options={["Active", "Inactive", "Pending"]}
               value={field.state.value}
               onChange={(e) => field.handleChange(e.target.value)}
               onBlur={field.handleBlur}
               error={field.state.meta.errors?.[0]}
-              placeholder="123 Main St, City, State 12345"
+              placeholder="Policy status"
               required
               disabled={isMutating}
             />
@@ -176,7 +199,7 @@ const CustomerForm = ({ customer = null, onSuccess }) => {
                 {isEditMode ? "Updating..." : "Creating..."}
               </>
             ) : (
-              <>{isEditMode ? "Update Customer" : "Create Customer"}</>
+              <>{isEditMode ? "Update Policy" : "Create Policy"}</>
             )}
           </button>
         </div>
@@ -185,4 +208,4 @@ const CustomerForm = ({ customer = null, onSuccess }) => {
   );
 };
 
-export default CustomerForm;
+export default PolicyForm;

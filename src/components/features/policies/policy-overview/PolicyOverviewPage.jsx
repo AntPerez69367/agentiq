@@ -1,9 +1,9 @@
 import usePagination from "@hooks/usePagination";
-import employeesAtom from "@/state/employees/employeeAtom";
+import policiesAtom from "@/state/policies/policiesAtom";
 import { useAtom, useSetAtom } from "jotai";
 import { Plus } from "lucide-react";
 import { useEffect, useMemo } from "react";
-import EmployeeOverviewTable from "./EmployeeOverviewTable";
+import PolicyOverviewTable from "./PolicyOverviewTable";
 import { PAGINATION } from "@/constants";
 import ErrorDisplay from "@components/common/ErrorDisplay";
 import LoadingSpinner from "@components/common/LoadingSpinner";
@@ -22,25 +22,23 @@ import {
 } from "@components/ui/select";
 
 import titleAtom from "@state/global/titleAtom";
-import {
-  createEmployeeIsOpenAtom,
-  selectedEmployeeAtom,
-} from "@/state/employees/employeeOverview";
 
-const EmployeeOverviewPage = () => {
+import {
+  createPolicyIsOpenAtom,
+  selectedPolicyAtom,
+} from "@/state/policies/policyOverview";
+
+const PolicyOverviewPage = () => {
   const { page, limit, setPage, setLimit } = usePagination();
   const setTitle = useSetAtom(titleAtom);
-  const setCreateEmployeeIsOpen = useSetAtom(createEmployeeIsOpenAtom);
-  const setSelectedEmployee = useSetAtom(selectedEmployeeAtom);
+  const setCreatePolicyIsOpen = useSetAtom(createPolicyIsOpenAtom);
+  const setSelectedPolicy = useSetAtom(selectedPolicyAtom);
 
   useEffect(() => {
-    setTitle("Employee Overview");
+    setTitle("Policy Overview");
   }, [setTitle]);
 
-  const paginatedAtom = useMemo(
-    () => employeesAtom(page, limit),
-    [page, limit]
-  );
+  const paginatedAtom = useMemo(() => policiesAtom(page, limit), [page, limit]);
 
   const [{ data, isPending, isError, isFetching }] = useAtom(paginatedAtom);
 
@@ -62,14 +60,14 @@ const EmployeeOverviewPage = () => {
   };
 
   if (isPending) {
-    return <LoadingSpinner text="Loading employees..." />;
+    return <LoadingSpinner text="Loading policies..." />;
   }
 
   if (isError) {
     return (
       <ErrorDisplay
-        title="Error loading employees"
-        error={{ message: "Failed to fetch employee data. Please try again." }}
+        title="Error loading policies"
+        error={{ message: "Failed to fetch policy data. Please try again." }}
         onRetry={handleRetry}
       />
     );
@@ -79,8 +77,8 @@ const EmployeeOverviewPage = () => {
   const hasPreviousPage = !!data.links?.prev;
 
   const handleOpenCreateModal = () => {
-    setSelectedEmployee(null);
-    setCreateEmployeeIsOpen(true);
+    setSelectedPolicy(null);
+    setCreatePolicyIsOpen(true);
   };
 
   return (
@@ -91,12 +89,11 @@ const EmployeeOverviewPage = () => {
           className="flex items-center gap-2 bg-purple-600 hover:bg-purple-700"
         >
           <Plus size={20} />
-          Create Employee
+          Create Policy
         </Button>
       </div>
 
-      <EmployeeOverviewTable data={data.employees} />
-
+      <PolicyOverviewTable data={data.policies} />
       <Pagination>
         <PaginationPrevious
           className={`cursor-pointer ${hasPreviousPage ? "" : "opacity-50 cursor-not-allowed"}`}
@@ -125,4 +122,4 @@ const EmployeeOverviewPage = () => {
   );
 };
 
-export default EmployeeOverviewPage;
+export default PolicyOverviewPage;

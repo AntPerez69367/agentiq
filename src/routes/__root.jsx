@@ -10,6 +10,8 @@ import titleAtom from "@state/global/titleAtom";
 import userAtom from "@state/global/userAtom";
 import { APP_META, ROUTES, ROUTE_LABELS } from "@/constants";
 import ErrorBoundary from "@components/common/ErrorBoundary";
+import ConfirmDialog from "@/components/common/ConfirmDialog";
+
 import { Toaster } from "@/components/ui/sonner";
 
 const NavigationLink = ({ to, children }) => {
@@ -97,6 +99,7 @@ const MainContent = () => (
     <div className="flex-1 p-6 overflow-auto bg-gray-900 text-gray-100">
       <ErrorBoundary>
         <Outlet />
+        <ConfirmDialog />
       </ErrorBoundary>
     </div>
   </div>

@@ -1,6 +1,7 @@
 import { z } from "zod";
 
-const policyFormSchema = z.object({
+export const policyFormSchema = z.object({
+  customerId: z.number().min(1, "Customer ID is required"),
   policyNumber: z.string().min(1, "Policy number is required"),
   policyName: z.string().min(1, "Policy name is required"),
   policyDescription: z.string().min(1, "Policy description is required"),

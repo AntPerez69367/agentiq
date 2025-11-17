@@ -1,5 +1,5 @@
 import { useEffect, useMemo } from "react";
-import { useAtom } from "jotai";
+import { useAtom, useSetAtom } from "jotai";
 import { atomWithQuery } from "jotai-tanstack-query";
 import { useNavigate, useLocation } from "@tanstack/react-router";
 import { customersApi } from "@api/customers";
@@ -19,7 +19,7 @@ const CustomerDetailPage = () => {
   const location = useLocation();
   const customerId = location.state?.customerId;
 
-  const [, setTitle] = useAtom(titleAtom);
+  const setTitle = useSetAtom(titleAtom);
 
   useEffect(() => {
     setTitle("Customer Details");
